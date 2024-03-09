@@ -74,3 +74,9 @@ SELECT industry, ROUND(AVG (revenue),1) AS avg_revenue_millions
 FROM fortune_companies
 GROUP BY industry
 HAVING revenue >=250
+
+# Which companies have healthcare benefits AND at least 18 paid time off days?
+SELECT company_name
+FROM fortune_companies
+WHERE healthcare_benefits =1
+AND paid_time_off_days >18

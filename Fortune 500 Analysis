@@ -69,3 +69,8 @@ END AS pto_days
 FROM fortune_companies
 ORDER BY pto_days;
 
+# Which industries have an average revenue of at least $250 Billion, and what are their average revenues?
+SELECT industry, ROUND(AVG (revenue),1) AS avg_revenue_millions
+FROM fortune_companies
+GROUP BY industry
+HAVING revenue >=250

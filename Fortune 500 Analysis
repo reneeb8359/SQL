@@ -58,9 +58,9 @@ VALUES
     ('Company JJ', 'Manufacturing', 370.0, 3100, 1, 20, 12, 7.6),
     ('Company KK', 'Healthcare', 150.2, 3400, 0, 16, 8, 5.3);
 
-#Analysis:
+## The following SQL was written to answer specific questions about the content on Fortune 500:
 
-#Assign all companies as "perfect", "alright", or "terrible" based on how many paid time off days they offer and order them by assignment.
+#1. Assign all companies as "perfect", "alright", or "terrible" based on how many paid time off days they offer and order them by assignment.
 SELECT company_name, paid_time_off_days,
 CASE WHEN paid_time_off_days >=20 THEN 'perfect'
 WHEN paid_time_off_days >=16 THEN 'alright'
@@ -69,19 +69,19 @@ END AS pto_days
 FROM fortune_companies
 ORDER BY pto_days;
 
-# Which industries have an average revenue of at least $250 Billion, and what are their average revenues?
+#2. Which industries have an average revenue of at least $250 Billion, and what are their average revenues?
 SELECT industry, ROUND(AVG (revenue),1) AS avg_revenue_millions
 FROM fortune_companies
 GROUP BY industry
 HAVING revenue >=250;
 
-# Which companies have healthcare benefits AND at least 18 paid time off days?
+#3. Which companies have healthcare benefits AND at least 18 paid time off days?
 SELECT company_name
 FROM fortune_companies
 WHERE healthcare_benefits =1
 AND paid_time_off_days >18;
 
-# Which company in the Technology industry has the maximum average employee tenure, and what's their average tenure?
+#4. Which company in the Technology industry has the maximum average employee tenure, and what's their average tenure?
 SELECT company_name, max(avg_employee_tenure)
 FROM fortune_companies
 WHERE industry = 'Technology';

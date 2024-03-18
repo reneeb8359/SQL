@@ -29,21 +29,21 @@ VALUES
 
 #For this project, I used SQL to query the Superstore database to get information about items sold at the store and their prices. 
 
-#Use a SELECT statement to order the items by price.
+#1. Use a SELECT statement to order the items by price.
 SELECT price
 FROM superstore
 ORDER BY (price);
 
-#Show a statistic about the item prices.
+#2. Show a statistic about the item prices.
 SELECT SUM(price)
 FROM superstore;
 
-#Show a statistic about the price for items in the category of "Kitchen Supplies". 
+#3. Show a statistic about the price for items in the category of "Kitchen Supplies". 
 SELECT AVG(price)
 FROM superstore
 WHERE category="Kitchen Supplies";
 
-#Show a statistic about the stock for an item. 
+#4. Show a statistic about the stock for an item. 
 SELECT stock_quantity
 FROM superstore
 WHERE item_name = "Non-Stick Baking Set";

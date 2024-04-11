@@ -1,0 +1,118 @@
+#In this SQL, I'm querying a database with multiple tables in it to quantify information about customer and order data. 
+
+#1. Show Customers (their full names, customer ID, and country) who are not in the US.
+SELECT FirstName, LastName, CustomerID, Country
+FROM chinook.customers
+WHERE Country != 'USA';
+
+#2. Show only the Customers from Brazil.
+SELECT *
+FROM chinook.customers
+WHERE Country = 'Brazil';
+
+#3. Find the Invoices of customers who are from Brazil. The resulting table should show the customer's full name, Invoice ID, Date of the invoice, and billing country.
+SELECT cust.FirstName, cust.LastName, inv.InvoiceId, inv.InvoiceDate, inv.BillingCountry
+FROM chinook.customers cust
+LEFT JOIN chinook.invoices inv
+ON cust.CustomerID = inv.CustomerId
+WHERE inv.BillingCountry = 'Brazil';
+
+#4. Show the Employees who are Sales Agents.
+SELECT *
+FROM chinook.employees
+WHERE Title = 'Sales Support Agent'
+
+#5. Find a unique/distinct list of billing countries from the Invoice table.
+SELECT DISTINCT BillingCountry
+FROM chinook.invoices;
+
+#6. Provide a query that shows the invoices associated with each sales agent. The resulting table should include the Sales Agent's full name.
+SELECT emp.FirstName, emp.LastName, inv.InvoiceId
+FROM chinook.invoices AS inv
+JOIN chinook.customers AS cust
+ON inv.InvoiceId = cust.CustomerId
+JOIN chinook.employees AS emp
+ON cust.SupportRepId = emp.EmployeeId 
+WHERE emp.Title = 'Sales Support Agent'
+ORDER BY emp.FirstName, emp.LastName;
+
+#7. Show the Invoice Total, Customer name, Country, and Sales Agent name for all invoices and customers.
+SELECT emp.FirstName AS Employee_First, emp.LastName AS Employee_Last,
+ cust.FirstName AS Customer_First, cust.Lastname AS Customer_Last, cust.Country, inv.Total
+FROM chinook.invoices AS inv
+JOIN chinook.customers AS cust
+ON inv.InvoiceId = cust.CustomerId
+JOIN chinook.employees AS emp
+ON cust.SupportRepId = emp.EmployeeId 
+ORDER BY Employee_First, Employee_Last;
+
+#8. How many Invoices were there in 2009?
+SELECT COUNT(*)
+FROM chinook.invoices
+WHERE InvoiceDate LIKE '2009%'
+
+#9. What are the total sales for 2009?
+SELECT SUM(Total)
+FROM chinook.invoices
+WHERE InvoiceDate LIKE '2009%';
+
+#10. Write a query that includes the purchased track name with each invoice line ID.
+SELECT t.Name, inv.InvoiceLineId
+FROM chinook.invoice_items inv
+JOIN chinook.tracks t
+ON inv.TrackId = t.TrackID;
+
+#11. Write a query that includes the purchased track name AND artist name with each invoice line ID.
+SELECT t.Name AS Track, art.name As Artist, inv.InvoiceLineId AS InvoiceLineId
+FROM chinook.invoice_items inv
+
+LEFT JOIN chinook.tracks t
+ON inv.TrackId = t.TrackID
+
+INNER JOIN chinook.albums alb
+ON t.AlbumId = alb.AlbumID
+
+LEFT JOIN chinook.artists art
+ON alb.ArtistId = art.ArtistId;
+
+#12. Provide a query that shows all the Tracks, and include the Album name, Media type, and Genre.
+SELECT t.Name AS 'Track Name', alb.Title AS 'Album Title', med.Name AS 'Media Type', gen.Name AS 'Genre'
+FROM chinook.tracks t
+
+JOIN chinook.albums alb
+ON alb.AlbumId = t.AlbumId
+
+JOIN chinook.media_types med
+ON med.MediaTypeId = t.MediaTypeId
+
+JOIN chinook.genres gen
+ON gen.GenreId = t.genreId;
+
+#13. Show the total sales made by each sales agent.
+SELECT emp.FirstName, emp.LastName, ROUND(SUM(inv.TOTAL), 2) AS 'Total Sales'
+FROM chinook.employees emp
+
+JOIN chinook.customers cust
+ON cust.SupportRepId = emp.EmployeeId 
+
+JOIN chinook.invoices inv
+ON inv.CustomerId = cust.CustomerId
+
+WHERE emp.Title = 'Sales Support Agent'
+GROUP BY emp.FirstName, emp.LastName;
+
+#14. Which sales agent made the most dollars in sales in 2009?
+SELECT emp.FirstName, emp.LastName, ROUND(SUM(inv.TOTAL), 2) AS Total_Sales
+FROM chinook.employees emp
+
+JOIN chinook.customers cust
+ON cust.SupportRepId = emp.EmployeeId
+
+JOIN chinook.invoices inv
+ON inv.CustomerId = cust.CustomerId
+
+WHERE emp.Title = 'Sales Support Agent'
+AND inv.InvoiceDate LIKE '2009%'
+GROUP BY emp.FirstName, emp.LastName
+ORDER BY Total_Sales desc
+LIMIT 1;
